@@ -20,60 +20,80 @@ function showPosition(position) {
     var mapholder = document.getElementById('mapholder')
     mapholder.style.height = '500px';
     mapholder.style.width = '750px';
-    var locations = [
-    ['Starbucks: Waterloo Chapters', 43.4856177,-80.5263767, 9]
-    ['Starbucks: Fischer Hallman & Max Becker', 43.407281,-80.5004275, 8],
-    ['Starbucks: Uptown-Waterloo', 43.462827,-80.5222796, 7],
-    ['Starbucks: King & University', 43.4762724,-80.5252764, 6],
-    ['Starbucks: UW STC', 43.4708997, -80.545619, 5],
-    ['Stabucks: Colombia Street', 43.4677333, -80.6037212, 4],
-    ['Starbucks: Ira Needles (Erb Street)', 43.4465971,-80.5719525, 3],
-    ['Starbucks: The BoardWalk', 43.4266183,-80.5532513, 2],
-    ['Starbucks: Sunrise Plaza', 43.4152555,-80.515119, 1]
-    ];
 
+    var myOptions = {
+        center:latlon,zoom:14,
+        mapTypeId:google.maps.MapTypeId.ROADMAP,
+        mapTypeControl:false,
+        navigationControlOptions:{style:google.maps.NavigationControlStyle.SMALL}
+    }
 
-43.407281,-80.5004275
-var myOptions = {
-    center:latlon,zoom:14,
-    mapTypeId:google.maps.MapTypeId.ROADMAP,
-    mapTypeControl:false,
-    navigationControlOptions:{style:google.maps.NavigationControlStyle.SMALL}
-}
+// Creates a map variable and appends to mapholder div.
 
-    // Creates a map variable and appends to mapholder div.
+var map = new google.maps.Map(document.getElementById("mapholder"), myOptions);
 
-    var map = new google.maps.Map(document.getElementById("mapholder"), myOptions);
+// Pinpoints and marks exactly the position of the user
 
-    // Pinpoints and marks exactly the position of the user
+var marker = new google.maps.Marker({position:latlon,map:map,title:"You are here!"});
 
-    var marker = new google.maps.Marker({position:latlon,map:map,title:"You are here!"});
+var infowindow = new google.maps.InfoWindow();
 
-    var infowindow = new google.maps.InfoWindow();
+var locations = [
+    ['City Cafe and Bakery', 43.46210249999999,-80.5218567, 29],
+    ['Matter of Taste', 43.46210249999999,-80.5218567, 29],
+    ['Cafe Europe', 43.4485908,-80.48996110000002, 28],
+    ['Serrinia Cafe', 43.4480556,-80.48356519999999, 27],
+    ['Adventures Guild Cafe', 43.4509087,-80.49024350000002, 26],
+    ['Cafe Joy', 43.4479026,-80.48574789999998, 25],
+    ['Queen Street Commons Cafe',43.44926229999999,-80.489531, 24],
+    ['Darlise Cafe',43.44925600000001,-80.48940299999998, 23],
+    ['Mercury Cafe',43.4515954,-80.48914869999999, 22],
+    ['Balzacs Coffee Roasters',43.4512677, -80.49864200000002 , 21],
+    ['Teremok Cafe', 43.46516760000001, -80.5185131, 20],
+    ['Coffee Culture', 43.46586300000001, -80.52281199999999, 19],
+    ['Princess Cafe', 43.4665802, -80.52239159999999, 18],
+    ['Cafe 22', 43.4647127, -80.52190610000002, 17],
+    ['Seven Shores Cafe', 43.46602499999999, -80.52114360000002, 16],
+    ['DVLB', 43.4680417, -80.52293889999999, 15],
+    ['Settlement Co.', 43.46572810000001, -80.52277950000001, 14],
+    ['Settlement Co.', 43.4524737, -80.49821789999999, 13],
+    ['Smile Tiger Coffee Roasters', 43.456015, -80.49167549999999, 12],
+    ['Starbucks: Waterloo Chapters', 43.4857912, -80.52630740000001, 11],
+    ['Starbucks: Columbia Street', 43.4679668, -80.5680142, 10],
+    ['Starbucks: Ira Needles', 43.42550929999999, -80.55363599999998, 9],
+    ['Starbucks: Fairway Road', 43.4195716, -80.4474237, 8],
+    ['Starbucks: Erb Street', 43.44648, -80.57195999999999, 7],
+    ['Starbucks: Conestoga Mall', 43.4856342, -80.52630640000001, 6],
+    ['Starbucks: University', 43.47368789999999, -80.52914149999998, 5],
+    ['Starbucks: King Street', 43.4628277, -80.5219591, 4],
+    ['Starbucks: Gateway', 43.4064339, -80.38819769999998, 3],
+    ['Starbucks: Max Becker', 43.4073263, -80.5003059, 2],
+    ['Starbucks: Fairview Park Mall', 43.4199808, -80.44665470000001, 1]
+];
 
-    var i;
+var i;
 
-    for (i = 0; i < locations.length; i++) { 
-      marker = new google.maps.Marker({
+for (i = 0; i < locations.length; i++) { 
+    marker = new google.maps.Marker({
         position: new google.maps.LatLng(locations[i][1], locations[i][2]),
         map: map
-      });
+    });
 
-      google.maps.event.addListener(marker, 'click', (function(marker, i) {
+    google.maps.event.addListener(marker, 'click', (function(marker, i) {
         return function() {
           infowindow.setContent(locations[i][0]);
           infowindow.open(map, marker);
-        }
-      })(marker, i));
-    }
+      }
+  })(marker, i));
+}
 }
 
-// Various cases of errors and corresponding messages to user if Geolocation is not working.
+// Various error cases with corresponding messages to user if Geolocation is unavailable.
 
 function showError(error) {
     switch(error.code) {
         case error.PERMISSION_DENIED:
-        x.innerHTML = "User denied the request for Geolocation."
+        x.innerHTML = "User denied Geolocation request."
         break;
         case error.POSITION_UNAVAILABLE:
         x.innerHTML = "Location information is unavailable."
@@ -85,6 +105,4 @@ function showError(error) {
         x.innerHTML = "An unknown error occurred."
         break;
     }
-}   
-
-
+}
